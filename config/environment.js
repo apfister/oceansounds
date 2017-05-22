@@ -2,10 +2,25 @@
 
 module.exports = function(environment) {
   var ENV = {
-    modulePrefix: 'testproject',
+    modulePrefix: 'oceansounds',
     environment: environment,
     rootURL: '/',
     locationType: 'auto',
+
+    torii: {
+      sessionServiceName: 'session',
+      providers: {
+        'arcgis-oauth-bearer': {
+          // apiKey: '1fa2j7mOrkB4FTWm',
+          apiKey: 'arcgisonline',
+          portalUrl: 'https://www.arcgis.com',
+          remoteServiceName: 'iframe',
+          display: 'iframe',
+          showSocialLogins: false
+        }
+      }
+    },
+
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
@@ -20,6 +35,12 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
+      portalBaseUrl: 'https://www.arcgis.com',
+      arcgisPortal: {
+        domain: 'arcgis.com',
+        env: 'www',
+        maps: 'maps'
+      }
     }
   };
 

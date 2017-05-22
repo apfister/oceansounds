@@ -1,0 +1,22 @@
+$icon-font-path: '../assets/fonts/';
+
+$Calcite_Gray_050:   #ffffff;
+$Calcite_Gray_700:   #323232;
+
+/*$primary-font-sanserif:  'Avenir Next W01', 'Avenir Next', 'Avenir';
+$primary-font-serif: 'Kepler W01';
+$primary-headings-weight: 300;*/
+
+/*@import 'calcite-bootstrap';*/
+@import 'components/calcite-bootstrap';
+
+$icon-font-path: '../assets/fonts/';
+
+
+@import "bootstrap";
+
+@import 'signin';
+
+.navbar-brand {
+  padding: 5.5px 15px;
+}
