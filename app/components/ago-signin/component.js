@@ -10,10 +10,6 @@ export default Ember.Component.extend({
     }
   },
 
-  didInsertElement() {
-    console.log('hji');
-  },
-
   tagName: 'li',
 
   isAuthenticated: Ember.computed.reads('session.isAuthenticated'),

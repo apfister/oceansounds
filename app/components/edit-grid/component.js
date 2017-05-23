@@ -1,48 +1,47 @@
 import Ember from 'ember';
-import ENV from 'oceansounds/config/environment';
+import EditGrid from 'npm:editable-grid';
 
 export default Ember.Component.extend({
 
   hostedService: Ember.inject.service(),
 
-  showCreateSuccess: true,
+  fieldTypes: {
+    string: 'esriFieldTypeString',
+    integer: 'esriFieldTypeInteger',
+    double: 'esriFieldTypeDouble',
+    date: 'esriFieldTypeDate'
+  },
+
+  fieldLengthDefaults: {
+    string: 255,
+    integer: 'esriFieldTypeInteger',
+    double: 'esriFieldTypeDouble',
+    date: 'esriFieldTypeDate'
+  },
 
   actions: {
-    addField: function () {
-      const grid = window.editableGrid;
-      const rows = editableGrid.getRowCount();
-      let index;
-      if (rows === 0) {
-        index = 1;
-      } else {
-        index = rows + 1;
-      }
-      const newRow = {
-        name: `my_field${index}`,
-        alias: `My Field${index}`,
-        type: 'esriFieldTypeString'
-      };
-
-      grid.insertAfter(index, index, newRow);
-    },
-
     publish: function () {
       Ember.$('#btnPublish').addClass('disabled');
       Ember.$('#successMessage').html('Publishing ...');
 
-      const grid = window.editableGrid;
-      const rowCount = grid.getRowCount();
-      let fields=[], row;
-      for (let i=0; i < rowCount;i++) {
-        row = grid.getRowValues(i);
-        fields.push({
+      const data = this.get('config.data');
+
+      const fieldTypes = this.get('fieldTypes');
+
+      let fields = [], field;
+      data.forEach( (row) => {
+        field = {
           name: row.name,
           alias: row.alias,
-          type: row.type
-        });
-      }
+          type: fieldTypes[row.type.toLowerCase()]
+        };
 
-      // console.log('fields', fields);
+        if (row.type.toLowerCase() === 'string') {
+          field.length = 255;
+        }
+
+        fields.push( field );
+      });
 
       const serviceName = Ember.$('#txtName').val();
 
@@ -51,11 +50,6 @@ export default Ember.Component.extend({
       };
 
       const userName = this.get('session.currentUser.username');
-      const token = this.get('session.token');
-
-      const portalOpts = {
-        token: token
-      };
 
       const hostedService = this.get('hostedService');
 
@@ -65,8 +59,7 @@ export default Ember.Component.extend({
         folderId = null;
       }
 
-      const me = this;
-      hostedService.create( params, userName, folderId, portalOpts)
+      hostedService.create( params, userName, folderId)
         .then( (response) => {
 
           const itemId = response.itemId;
@@ -147,7 +140,7 @@ export default Ember.Component.extend({
 
           definition.layers[0].fields = definition.layers[0].fields.concat(fields);
 
-          hostedService.addToDefinition( fsUrl, definition, layerId, portalOpts )
+          hostedService.addToDefinition( fsUrl, definition, layerId )
             .then( (response) => {
 
               if (response.success) {
@@ -168,43 +161,104 @@ export default Ember.Component.extend({
 
   didInsertElement() {
 
-    var metadata = [];
-		metadata.push({ name: "name", label: "Name", datatype: "string", editable: true});
-		metadata.push({ name: "alias", label:"Alias", datatype: "string", editable: true});
-		metadata.push({ name: "type", label: "Type", datatype: "string", editable: true,
-      values: {
-        esriFieldTypeString: 'String',
-        esriFieldTypeInteger: 'Integer',
-        esriFieldTypeDouble: 'Double'
-      }
+    const config = {
+      el: Ember.$('#edit-grid'),
+      borders: true,
+      stateManager: {
+        isEditable: function () {
+          return true;
+        }
+      },
+      rows: {
+        newRow: true
+      },
+      columns: [
+        {
+          id: 'name',
+          title: 'Name',
+          width: '80%'
+        },
+        {
+          id: 'alias',
+          title: 'Alias',
+          width: '80%'
+        },
+        {
+          id: 'type',
+          title: 'Type',
+          type: 'select',
+          list: ['String', 'Integer', 'Double', 'Date'],
+          width: '80%',
+          preCreateCallback: function () {
+            return 'String';
+          }
+        }
+      ],
+      data: [
+        {
+          id: 'id-1',
+          name: 'my_field',
+          alias: 'My Field',
+          type: 'String'
+        }
+      ]
+    };
+
+    this.set('config', config);
+
+    const g = new EditGrid(config);
+
+    g._createDeleteRows = function () {
+      var finds = this.options.el.find('td[data-col-id="' + this.options.columns[0].id + '"]');
+      var tds = finds.filter(function (index) {
+          return index < finds.length-1;
+        });
+
+      tds.addClass('delete-column');
+      tds.prepend(
+              '<div class="row-delete">' +
+              '<button type="button" class="close" aria-hidden="true">&times;</button>' +
+              '</div>');
+    };
+
+    g.render();
+
+    this.updateAddFieldButton();
+
+    g.on('editable-can-delete', function (/*rowId*/) {
+      // could add a confirm message box here
+      return Ember.$.Deferred().resolve();
+      // return true;
     });
-    metadata.push({ name: "action", label: "Delete Field", datatype: "html", editable: false});
-
-		var data = [];
-    data.push({
-      id: 1,
-      values: {
-        name: 'my_field',
-        alias: 'My Field',
-        type: 'esriFieldTypeString'
-      }
+    g.on('editable-new-row', function(newObj) {
+      console.log(newObj);
     });
 
-		const editableGrid = new EditableGrid("DemoGridJsData", { enableSort: false});
-		editableGrid.load({"metadata": metadata, "data": data});
+    var me = this;
+    g.on('editable-post-render', function () {
+      // console.log('post-render');
+      g.trigger('editable-delete-mode', true);
 
-    // const me = this;
-    editableGrid.setCellRenderer('action', new CellRenderer({
-      render: function(cell, value) {
-        var rowId = editableGrid.getRowId(cell.rowIndex);
+      me.updateAddFieldButton();
+      me.updateRemoveFieldButton();
+    });
 
-  		  cell.innerHTML = "<a onclick=\"editableGrid.remove("+ cell.rowIndex + ");\" style=\"cursor:pointer\">" +
-        "<span class='glyphicon glyphicon-trash'></span></a>";
-      }
-    }));
+    g.trigger('editable-delete-mode', true);
 
-		editableGrid.renderGrid('gridHolder', 'table');
+    this.updateRemoveFieldButton();
 
-    window.editableGrid = editableGrid;
+    this.set('grid', g);
+  },
+
+  updateRemoveFieldButton() {
+    Ember.$('.row-delete button').html('<span class="glyphicon glyphicon-trash text-danger"></span>');
+  },
+
+  updateAddFieldButton() {
+    Ember.$('.editable-footer-table button')
+      .removeClass('btn-link')
+      .addClass('btn-default btn-lg')
+      .text('Add Field');
   }
+
 });

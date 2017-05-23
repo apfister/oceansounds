@@ -25,6 +25,36 @@ $icon-font-path: '../assets/fonts/';
   width: 225px;
 }
 
+.table-bordered > thead > tr > th, .table-bordered > thead > tr > td,
+.editable-header-table table {
+  border-bottom-width: 0px !important;
+  font-weight: normal;
+}
+
+.editable-body-table td {
+  border-top-width: 0px !important;
+}
+
+.editable-header-table thead > tr {
+  background-color: rgba(0, 121, 193, 0.05) !important;
+}
+
+.editable-body-table input {
+  display: inline-block;
+  width: 80%;
+}
+
+.editable-footer-table td:first-child input {
+  margin-left: 17px
+}
+.editable-footer-table input {
+  width: 80%;
+}
+.editable-footer-table table,
+.editable-footer-table table td {
+  border: 0px !important;
+}
+
 .numberCircle {
   border-radius: 50%;
 

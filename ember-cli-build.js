@@ -6,6 +6,11 @@ const Funnel = require('broccoli-funnel');
 module.exports = function(defaults) {
   const app = new EmberApp(defaults, {
     // Add options here
+
+    fingerprint: {
+      enabled: false
+    },
+    
     sassOptions: {
       includePaths: [
         'node_modules/bootstrap-sass/assets/stylesheets',
@@ -36,13 +41,6 @@ module.exports = function(defaults) {
 
   // bootstrap-select
   app.import('./bower_components/bootstrap-select/dist/js/bootstrap-select.js');
-
-  app.import('./vendor/editablegrid/editablegrid.js');
-  app.import('./vendor/editablegrid/editablegrid_editors.js');
-  app.import('./vendor/editablegrid/editablegrid_validators.js');
-  app.import('./vendor/editablegrid/editablegrid_renderers.js');
-  app.import('./vendor/editablegrid/editablegrid_utils.js');
-  // app.import('./vendor/editablegrid/editablegrid.css');
 
   const extraAssets = new Funnel('./node_modules/bootstrap-sass/assets/fonts/bootstrap', {
     srcDir: '/',
