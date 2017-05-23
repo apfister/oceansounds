@@ -4,7 +4,7 @@ module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'oceansounds',
     environment: environment,
-    rootURL: '/',
+    rootURL: '/oceansounds/',
     locationType: 'auto',
 
     torii: {

@@ -4,7 +4,7 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     var me = this;
-    this.$('.geomType > a').click( function (evt) {
+    this.$('.geomType > a').click( function () {
 
       me.$('.geomType > a').each( function (index, item) {
         me.$(item).removeClass('active');
