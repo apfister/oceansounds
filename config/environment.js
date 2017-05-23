@@ -64,7 +64,8 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    ENV.rootURL = '/oceansounds/';
+    ENV.locationType = 'hash';
   }
 
   return ENV;

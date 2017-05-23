@@ -43,7 +43,7 @@ export default Ember.Component.extend({
   }),
 
   thumbnailUrl: Ember.computed('session.orgPortalUrl', 'session.currentUser.thumbnail', function () {
-    var result = 'assets/images/no-user-thumb.jpg';
+    var result = 'images/no-user-thumb.jpg';
     var thumbnail = this.get('session.currentUser.thumbnail');
     if (thumbnail) {
       result = `//${this.get('session.orgPortalUrl')}/sharing/rest/community/users/${this.get('session.currentUser.username')}/info/${thumbnail}?token=${this.get('session.token')}`;

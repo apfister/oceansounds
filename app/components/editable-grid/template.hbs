@@ -1,1 +1,13 @@
-{{yield}}
+<div style="text-align:left;margin-left: 40px;">
+  <button {{action 'addField'}} class="btn btn-default">
+    <span class="glyphicon glyphicon-plus"></span> Add Field
+  </button>
+</div>
+<div id="gridHolder"></div>
+<hr>
+<div style="text-align:left;margin-left: 40px;">
+  <button id="btnPublish" {{action 'publish'}} class="btn btn-lg btn-success">
+    <span class="glyphicon glyphicon-cloud-upload"></span> Publish!
+  </button>
+  <span id="successMessage"></span>
+</div>

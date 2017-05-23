@@ -12,6 +12,7 @@ export default Ember.Route.extend({
     let defaultLocale = 'en-us';
 
     intl.setLocale(defaultLocale);
+
   },
 
   actions: {

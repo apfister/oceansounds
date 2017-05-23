@@ -42,7 +42,7 @@ module.exports = function(defaults) {
   app.import('./vendor/editablegrid/editablegrid_validators.js');
   app.import('./vendor/editablegrid/editablegrid_renderers.js');
   app.import('./vendor/editablegrid/editablegrid_utils.js');
-  app.import('./vendor/editablegrid/editablegrid.css');
+  // app.import('./vendor/editablegrid/editablegrid.css');
 
   const extraAssets = new Funnel('./node_modules/bootstrap-sass/assets/fonts/bootstrap', {
     srcDir: '/',

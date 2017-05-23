@@ -1,37 +1,210 @@
 import Ember from 'ember';
+import ENV from 'oceansounds/config/environment';
 
 export default Ember.Component.extend({
 
-  didInsertElement() {
-    console.log('didInsertElement!');
-    var metadata = [];
-		metadata.push({ name: "name", label: "NAME", datatype: "string", editable: true});
-		metadata.push({ name: "firstname", label:"FIRSTNAME", datatype: "string", editable: true});
-		metadata.push({ name: "age", label: "AGE", datatype: "integer", editable: true});
-		metadata.push({ name: "height", label: "HEIGHT", datatype: "double(m,2)", editable: true});
-		metadata.push({ name: "country", label: "COUNTRY", datatype: "string", editable: true});
-		metadata.push({ name: "email", label: "EMAIL", datatype: "email", editable: true});
-		metadata.push({ name: "freelance", label: "FREELANCE", datatype: "boolean", editable: true});
-		metadata.push({ name: "lastvisit", label: "LAST VISIT", datatype: "date", editable: true});
-		// a small example of how you can manipulate the object in javascript
-		metadata[4].values = {};
-		metadata[4].values["Europe"] = {"be":"Belgium","fr":"France","uk":"Great-Britain","nl":"Nederland"};
-		metadata[4].values["America"] = {"br":"Brazil","ca":"Canada","us":"USA"};
-		metadata[4].values["Africa"] = {"ng":"Nigeria","za":"South-Africa","zw":"Zimbabwe"};
-		var data = [];
-		data.push({id: 1, values: {"country":"uk","age":33,"name":"Duke","firstname":"Patience","height":1.842,"email":"patience.duke@gmail.com","lastvisit":"11\/12\/2002"}});
-		data.push({id: 2, values: ["Rogers","Denise",59,1.627,"us","rogers.d@gmail.com","","07\/05\/2003"]});
-		data.push({id: 3, values: {"name":"Dujardin","firstname":"Antoine","age":21,"height":1.73,"country":"fr","email":"felix.compton@yahoo.fr","freelance":true,"lastvisit":"21\/02\/1999"}});
-		data.push({id: 4, values: {"name":"Conway","firstname":"Coby","age":47,"height":1.96,"country":"za","email":"coby@conwayinc.com","freelance":true,"lastvisit":"01\/12\/2007"}});
-		data.push({id: 5, values: {"name":"Shannon","firstname":"Rana","age":24,"height":1.56,"country":"nl","email":"ranna.shannon@hotmail.com","freelance":false,"lastvisit":"07\/10\/2009"}});
-		data.push({id: 6, values: {"name":"Benton","firstname":"Jasmine","age":61,"height":1.71,"country":"ca","email":"jasmine.benton@yahoo.com","freelance":false,"lastvisit":"13\/01\/2009"}});
-		data.push({id: 7, values: {"name":"Belletoise","firstname":"André","age":31,"height":1.84,"country":"be","email":"belletoise@kiloutou.be","freelance":true,"lastvisit":""}});
-		data.push({id: 8, values: {"name":"Santa-Maria","firstname":"Martin","age":37,"height":1.80,"country":"br","email":"martin.sm@gmail.com","freelance":false,"lastvisit":"12\/06\/1995"}});
-		data.push({id: 9, values: {"name":"Dieumerci","firstname":"Amédé","age":37,"height":1.81,"country":"ng","email":"dieumerci@gmail.com","freelance":true,"lastvisit":"05\/07\/2009"}});
-		data.push({id: 10,values: {"name":"Morin","firstname":"Wanthus","age":46,"height":1.77,"country":"zw","email":"morin.x@yahoo.jsdata.com","freelance":false,"lastvisit":"04\/03\/2004"}});
+  hostedService: Ember.inject.service(),
 
-		const editableGrid = new EditableGrid("DemoGridJsData");
+  showCreateSuccess: true,
+
+  actions: {
+    addField: function () {
+      const grid = window.editableGrid;
+      const rows = editableGrid.getRowCount();
+      let index;
+      if (rows === 0) {
+        index = 1;
+      } else {
+        index = rows + 1;
+      }
+      const newRow = {
+        name: `my_field${index}`,
+        alias: `My Field${index}`,
+        type: 'esriFieldTypeString'
+      };
+
+      grid.insertAfter(index, index, newRow);
+    },
+
+    publish: function () {
+      Ember.$('#btnPublish').addClass('disabled');
+      Ember.$('#successMessage').html('Publishing ...');
+
+      const grid = window.editableGrid;
+      const rowCount = grid.getRowCount();
+      let fields=[], row;
+      for (let i=0; i < rowCount;i++) {
+        row = grid.getRowValues(i);
+        fields.push({
+          name: row.name,
+          alias: row.alias,
+          type: row.type
+        });
+      }
+
+      // console.log('fields', fields);
+
+      const serviceName = Ember.$('#txtName').val();
+
+      let params = {
+        name: serviceName
+      };
+
+      const userName = this.get('session.currentUser.username');
+      const token = this.get('session.token');
+
+      const portalOpts = {
+        token: token
+      };
+
+      const hostedService = this.get('hostedService');
+
+      let folderId = Ember.$('#selFolders').val();
+
+      if (folderId === 'root') {
+        folderId = null;
+      }
+
+      const me = this;
+      hostedService.create( params, userName, folderId, portalOpts)
+        .then( (response) => {
+
+          const itemId = response.itemId;
+          const portalKey = this.get('session.portal.urlKey');
+
+          const itemUrl = `http://${portalKey}.maps.arcgis.com/home/item.html?id=${itemId}`;
+
+          let fsUrl = response.serviceurl;
+
+          const geometryType = Ember.$('.geomType > a.active').data().geomtype;
+
+          const layerId = 0;
+
+          let definition = {
+            layers: [
+              {
+                id: layerId,
+                name: serviceName,
+                "displayField" : "",
+                "description" : "",
+                "copyrightText" : "",
+                "defaultVisibility" : true,
+                "isDataVersioned" : false,
+                "supportsCalculate" : true,
+                 "supportsAttachmentsByUploadId" : true,
+                 "supportsRollbackOnFailureParameter" : true,
+                 "supportsStatistics" : true,
+                 "supportsAdvancedQueries" : true,
+                 "supportsValidateSql" : true,
+                 "supportsCoordinatesQuantization" : true,
+                 "supportsApplyEditsWithGlobalIds" : true,
+                 "advancedQueryCapabilities" : {
+                   "supportsPagination" : true,
+                   "supportsQueryWithDistance" : true,
+                   "supportsReturningQueryExtent" : true,
+                   "supportsStatistics" : true,
+                   "supportsOrderBy" : true,
+                   "supportsDistinct" : true,
+                   "supportsQueryWithResultType" : true,
+                   "supportsSqlExpression" : true,
+                   "supportsReturningGeometryCentroid" : true
+                 },
+                 "useStandardizedQueries" : false,
+                "geometryType" : geometryType,
+                "extent" : {
+                  "xmin" : -13090714.767112788,
+                  "ymin" : 3841739.0914657288,
+                  "xmax" : -12922032.654624918,
+                  "ymax" : 3962581.2727843975,
+                  "spatialReference" : {
+                    "wkid" : 102100,
+                    "latestWkid" : 3857
+                  }
+                },
+                type: 'Feature Layer',
+                "allowGeometryUpdates" : true,
+                "hasAttachments" : false,
+                "htmlPopupType" : "esriServerHTMLPopupTypeNone",
+                "hasM" : false,
+                "hasZ" : false,
+                globalIdField : "GlobalID",
+                objectIdField: "FID",
+                fields: [
+                  { name: 'FID', alias: 'FID', type: 'esriFieldTypeInteger', nullable: false, editable: false, defaultValue: null, length: 4},
+                  { name: 'GlobalID', alias: 'GlobalID', type: 'esriFieldTypeGlobalID', "defaultValue" : "NEWID() WITH VALUES"}
+                ],
+                "supportedQueryFormats" : "JSON",
+                "hasStaticData" : false,
+                "maxRecordCount" : 1000,
+                "standardMaxRecordCount" : 4000,
+                "tileMaxRecordCount" : 4000,
+                "maxRecordCountFactor" : 1,
+                "capabilities" : "Create,Delete,Query,Update,Editing,Extract,Sync",
+                "exceedsLimitFactor" : 1
+              }
+            ]
+          };
+
+          definition.layers[0].fields = definition.layers[0].fields.concat(fields);
+
+          hostedService.addToDefinition( fsUrl, definition, layerId, portalOpts )
+            .then( (response) => {
+
+              if (response.success) {
+                Ember.$('#successMessage').html(`Success! <a href="${itemUrl}" target="_blank">View Item Page</a>`);
+              } else {
+                Ember.$('#successMessage').html(`error creating service :: JSON.stringify(${response})`);
+              }
+
+              Ember.$('#btnPublish').removeClass('disabled');
+            });
+
+        }, (error) => {
+          Ember.$('#successMessage').html(`error creating service :: ${error}`);
+          Ember.$('#btnPublish').removeClass('disabled');
+        });
+    }
+  },
+
+  didInsertElement() {
+
+    var metadata = [];
+		metadata.push({ name: "name", label: "Name", datatype: "string", editable: true});
+		metadata.push({ name: "alias", label:"Alias", datatype: "string", editable: true});
+		metadata.push({ name: "type", label: "Type", datatype: "string", editable: true,
+      values: {
+        esriFieldTypeString: 'String',
+        esriFieldTypeInteger: 'Integer',
+        esriFieldTypeDouble: 'Double'
+      }
+    });
+    metadata.push({ name: "action", label: "Delete Field", datatype: "html", editable: false});
+
+		var data = [];
+    data.push({
+      id: 1,
+      values: {
+        name: 'my_field',
+        alias: 'My Field',
+        type: 'esriFieldTypeString'
+      }
+    });
+
+		const editableGrid = new EditableGrid("DemoGridJsData", { enableSort: false});
 		editableGrid.load({"metadata": metadata, "data": data});
-		editableGrid.renderGrid(this.elementId, "testgrid");
+
+    // const me = this;
+    editableGrid.setCellRenderer('action', new CellRenderer({
+      render: function(cell, value) {
+        var rowId = editableGrid.getRowId(cell.rowIndex);
+
+  		  cell.innerHTML = "<a onclick=\"editableGrid.remove("+ cell.rowIndex + ");\" style=\"cursor:pointer\">" +
+        "<span class='glyphicon glyphicon-trash'></span></a>";
+      }
+    }));
+
+		editableGrid.renderGrid('gridHolder', 'table');
+
+    window.editableGrid = editableGrid;
   }
 });

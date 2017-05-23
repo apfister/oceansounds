@@ -13,6 +13,11 @@
     <div class='collapse navbar-collapse'>
       <ul class='nav navbar-nav navbar-right pad-top-10'>
         <ul class='nav navbar-nav navbar-right'>
+          <!-- {{#if session.shouldRage}}
+            <li><a href="#">Rage</a></li>
+          {{else}}
+            <li><a href="#">Chill</a></li>
+          {{/if}} -->
           {{ago-signin currentUrl=applicationController.currentAppUrl  }}
         </ul>
       </ul>
