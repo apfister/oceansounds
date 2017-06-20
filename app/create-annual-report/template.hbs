@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row text-center">
+    <div class="col-xs-12">
+      <h3>There isn't much to this. Just click the button below and get started!</h3>
+    </div>
+    <div class="col-xs-12">
+      <button {{action 'createStoryMap'}} class="btn btn-default btn-lg">Create</button>
+    </div>
+  </div>
+  {{#if loading}}
+    {{loading-indicator}}
+  {{/if}}
+  {{#if showMessage}}
+    <div class="row text-center">
+      Sucess!! <a href="{{itemUrl}}" target="_blank">View Story Map!</a>
+    </div>
+  {{/if}}
+</div>

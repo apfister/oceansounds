@@ -15,7 +15,7 @@ export default Ember.Route.extend({
         .then((authorization) => {
           Ember.debug('AUTH SUCCESS: ', authorization);
           // transition to some secured route or... so whatever is needed
-          this.controller.transitionToRoute('create');
+          this.controller.transitionToRoute('home');
         })
         .catch((err) => {
           Ember.debug('AUTH ERROR: ', err);
@@ -42,7 +42,7 @@ export default Ember.Route.extend({
             .then((authorization) => {
               Ember.debug('AUTH SUCCESS: ', authorization);
               // transition to secured route
-              this.controller.transitionToRoute('create');
+              this.controller.transitionToRoute('home');
             })
             .catch((err) => {
               Ember.debug('AUTH ERROR: ' + JSON.stringify(err));

@@ -20,6 +20,7 @@ export default Ember.Route.extend({
       this.transitionTo('signin');
     },
     signout() {
+      console.log('signout!!!!');
       // depending on the type of auth, we need to do different things
       if (ENV.torii.providers['arcgis-oauth-bearer'].display && ENV.torii.providers['arcgis-oauth-bearer'].display === 'iframe') {
         // redirect the window to the signout url

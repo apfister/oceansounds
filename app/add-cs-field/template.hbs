@@ -1,0 +1,59 @@
+<div class="container">
+
+  <!-- <div class="row">
+    <div class="col-xs-12">
+      <p style="margin-top:25px;">First Question:</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      {{#bs-button-group value=buttonGroupValue type="radio" onChange=(action (mut buttonGroupValue)) as |bg|}}
+        {{#bg.button type="default" value='create'}}Create a new Story Map with more fields{{/bg.button}}
+        {{#bg.button type="default" value='existing'}}Add fields to an existing Story Map{{/bg.button}}
+      {{/bs-button-group}}
+    </div>
+  </div> -->
+
+  {{#if (eq buttonGroupValue 'create')}}
+    <div class="row">
+      <div class="col-xs-12">
+        <p style="margin-top:25px;">What should we call this Story Map?</p>
+      </div>
+    </div>
+    <div class="row" style="margin-left:25px;">
+      <div class="col-xs-12">
+        <input id="txtName" style="width:225px;" class="form-control" type="text" placeholder="Super Story Map" />
+      </div>
+    </div>
+
+  {{else}}
+    <div class="row">
+      <div class="col-xs-12">
+        <p style="margin-top:25px;">Which Story Map should we use?</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <select id="selItems">
+          {{#each selectedItems as |item|}}
+            <option id={{item.id}} data-url={{item.dataUrl}}>{{item.title}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+  {{/if}}
+
+  <div class="row">
+    <div class="col-xs-12">
+      <p style="margin-top:25px;">What fields should we add?</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      {{add-cs-field-edit-grid buttonGroupValue=buttonGroupValue }}
+    </div>
+  </div>
+
+</div>

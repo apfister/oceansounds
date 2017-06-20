@@ -1,8 +1,6 @@
 {
   "name": "oceansounds",
-  "dependencies": {},
-  "devDependencies": {
-    "bootstrap-sass": "^3.3.7",
-    "bootstrap-select": "^1.12.2"
+  "dependencies": {
+    "bootstrap-select": "^1.11.2"
   }
 }

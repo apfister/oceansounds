@@ -1,8 +1,59 @@
-<div class="container">
-  <div class="row text-center">
-    <div class="col-xs-12">
-      <h2>~ Everyone just cool out. Let's create a Feature Service. ~</h2>
-      {{#link-to 'create' class="btn btn-default btn-lg"}}Get Started{{/link-to}}
+<div class="container marg-top-50">
+  <div class="row marg-bottom-20">
+    <h4 class="text-center">~ A random collection of tools to make life a little bit easier ~</h4>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <ul class="cards-list">
+          <li>
+            <article class="card">
+              <img src="//unsplash.it/200/133/?image=815" alt="Card Thumbnail">
+              <div class="card-options" onclick="">
+                {{#link-to 'create-annual-report' tagName="button"}}Create{{/link-to}}
+              </div>
+              <hr>
+              <h6>Annual Report</h6>
+              <ul class="card-info">
+                <li>Create a Map Journal with templated sections ready to fill in with your own content.</li>
+              </ul>
+            </article>
+          </li>
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <ul class="cards-list">
+          <li>
+            <article class="card">
+              <img src="//unsplash.it/200/133/?image=442" alt="Card Thumbnail">
+              <div class="card-options" onclick="">
+                {{#link-to 'create-feature-service' tagName="button"}}Create{{/link-to}}
+              </div>
+              <hr>
+              <h6>Hosted Feature Service</h6>
+              <ul class="card-info">
+                <li>Create a Hosted Feature Service in your ArcGIS Online account.</li>
+              </ul>
+            </article>
+          </li>
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <ul class="cards-list">
+        <li>
+          <article class="card">
+            <img src="//unsplash.it/200/133/?image=1025" alt="Card Thumbnail">
+            <div class="card-options" onclick="">
+              <!-- <button class="btn disabled">Coming Soon ..</button> -->
+              {{#link-to 'add-cs-field' tagName="button"}}Add Field{{/link-to}}
+            </div>
+            <hr>
+            <h6>Add a Crowdsource Field</h6>
+            <ul class="card-info">
+              <li>Add a field to your Crowdsource Story Map Application.</li>
+            </ul>
+          </article>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

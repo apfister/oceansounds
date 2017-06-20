@@ -12,13 +12,21 @@ $primary-headings-weight: 300;*/
 
 $icon-font-path: '../assets/fonts/';
 
-
 @import "bootstrap";
 
+@import 'header';
 @import 'signin';
 
 .navbar-brand {
-  padding: 5.5px 15px;
+  padding: 5.5px 15px !important;
+  // padding: 0 !important;
+}
+
+.card-info li:first-of-type:after {
+  content: none;
+}
+.card h6 {
+  height: 1em;
 }
 
 #txtName {
@@ -69,3 +77,13 @@ $icon-font-path: '../assets/fonts/';
 
   font-size: 32px;
 }
+
+.marg-top-50 {
+  margin-top: 50px;
+}
+
+.marg-bottom-20 {
+  margin-bottom: 20px;
+}
+
+@import "ember-bootstrap/bootstrap";

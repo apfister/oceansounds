@@ -7,15 +7,17 @@ module.exports = function(defaults) {
   const app = new EmberApp(defaults, {
     // Add options here
 
-    fingerprint: {
-      enabled: false
-    },
-    
     sassOptions: {
       includePaths: [
         'node_modules/bootstrap-sass/assets/stylesheets',
         'node_modules/calcite-bootstrap/dist/sass'
       ]
+    },
+
+    'ember-bootstrap': {
+      'bootstrapVersion': 3,
+      'importBootstrapFont': true,
+      'importBootstrapCSS': false
     }
   });
 
@@ -32,15 +34,15 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  app.import('./bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js');
-  app.import('./bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js');
-  app.import('./bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js');
-  app.import('./bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js');
-  app.import('./bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js');
-  app.import('./bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js');
+  app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js');
+  app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js');
+  app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js');
+  app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js');
+  app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js');
+  app.import('bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js');
 
   // bootstrap-select
-  app.import('./bower_components/bootstrap-select/dist/js/bootstrap-select.js');
+  app.import('bower_components/bootstrap-select/dist/js/bootstrap-select.js');
 
   const extraAssets = new Funnel('./node_modules/bootstrap-sass/assets/fonts/bootstrap', {
     srcDir: '/',

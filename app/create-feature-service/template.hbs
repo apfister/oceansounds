@@ -1,0 +1,60 @@
+<div class="container">
+
+  <div class="row">
+    <!-- <div class="numberCircle">30</div> -->
+    <div class="col-xs-12">
+      <p style="margin-top:25px;">What should we call this service?</p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-left:25px;">
+    <div class="col-xs-12">
+      <input id="txtName" style="width:225px;" class="form-control" type="text" placeholder="Super Service" />
+      <!-- {{input id="txtName" style="width:225px;" class="form-control" placeholder="Super Service" focus-out="nameBlur"}}
+      {{#if serviceNameAvailable}}
+      yep
+      {{else}}
+      nope
+      {{/if}} -->
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <p style="margin-top:25px;">What folder should we put the service in?</p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-left:25px;">
+    <div class="col-xs-12">
+      <select id="selFolders">
+
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <p style="margin-top:25px;">What type of features are you stashing in here?</p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-left:25px;">
+    <div class="col-xs-12">
+      {{geometry-select}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <p style="margin-top:25px;">Ok, let's add some fields</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      {{edit-grid}}
+    </div>
+  </div>
+
+</div>
